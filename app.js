@@ -5,16 +5,19 @@
  * yazılan her değer GridState'e gider, GridState transpoz eşini döndürür,
  * DOM'da her iki kutu senkronlanır. Böylece (r,c) ↔ (c,r) birebir aynıdır:
  * birine yazılınca diğerine yazılır, birinden silinince diğerinden silinir.
+ *
+ * Kelime karesi: hücreler harf değil KELİME/kelime kümesi taşır. "Şiiri
+ * Yükle" mısrayı anlamlı bölüklere ayırıp döngüsel yerleştirir — her satır
+ * ve her sütun şiirin tamamını aynı okur.
  */
 
-const SIIR_METNI = [
-  "sanmaşâhımherkesisensâdıkâneyârolur",
-  "herkesisendostmusandınbelkiolağyârolur",
-  "sâdıkânebelkiolâlemededildârolur",
-  "yârolursanmaşâhımherkesisen",
+const SIIR_DIZELERI = [
+  ["Sanma şâhım", "Herkesi sen", "Sâdıkâne", "Yâr olur"],
+  ["Herkesi sen", "Sâdıkâne", "Yâr olur", "Sanma şâhım"],
 ];
 
 const MAX_BOYUT = 10;
+const VARSAYILAN_BOYUT = 4;
 
 /**
  * @param {typeof import("./grid.js").GridState} GridState
@@ -29,7 +32,7 @@ export function initApp(GridState) {
   const siirYukleBtn = document.getElementById("siirYukle");
   const temizleBtn = document.getElementById("temizle");
 
-  const grid = new GridState(5);
+  const grid = new GridState(VARSAYILAN_BOYUT);
   /** @type {HTMLInputElement[][]} */
   const inputlar = [];
   /** Programatik güncelleme sırasında olay tetiklemesini bastırır. */
@@ -53,7 +56,7 @@ export function initApp(GridState) {
     boyutButonlariEl.querySelectorAll(".boyut-btn").forEach((b) => {
       b.classList.toggle("secili", Number(b.dataset.boyut) === n);
     });
-    durumEl.textContent = `${n}×${n} kare seçildi. Hücrelere yazın; (satır, sütun) ve (sütun, satır) her zaman aynıdır.`;
+    durumEl.textContent = `${n}×${n} kare seçildi. Hücrelere kelime yazın; (satır, sütun) ve (sütun, satır) her zaman aynıdır.`;
     durumEl.classList.remove("iyi", "uyari");
     okumaGuncelle();
   }
@@ -73,7 +76,7 @@ export function initApp(GridState) {
 
         const baslik = document.createElement("span");
         baslik.className = "hucre-baslik";
-        baslik.textContent = `${r},${c}`;
+        baslik.textContent = `${r + 1},${c + 1}`;
 
         const input = document.createElement("input");
         input.type = "text";
@@ -128,14 +131,14 @@ export function initApp(GridState) {
 
   // ── Okuma paneli ────────────────────────────────────
   function okumaGuncelle() {
-    const satirlar = grid.readRows();
-    const sutunlar = grid.readCols();
+    const satirlar = grid.readRows(" ");
+    const sutunlar = grid.readCols(" ");
     okumaSatirlarEl.textContent = satirlar.join("\n") || "—";
     okumaSutunlarEl.textContent = sutunlar.join("\n") || "—";
 
     const dolu = grid.entries().some((e) => e.value.length > 0);
     if (!dolu) {
-      okumaSonucEl.textContent = "Kare henüz boş — yazmaya başlayın.";
+      okumaSonucEl.textContent = "Kare henüz boş — kelime yazmaya başlayın.";
       okumaSonucEl.className = "okuma-sonuc";
       return;
     }
@@ -151,30 +154,16 @@ export function initApp(GridState) {
 
   // ── Şiiri Yükle ─────────────────────────────────────
   function siirYukle() {
-    // İlk mısrayı kareye en uygun boyuta yerleştir:
-    // mısra uzunluğu <= N² olacak en küçük N.
-    const metin = SIIR_METNI[0];
-    let n = Math.ceil(Math.sqrt(metin.length));
-    n = Math.max(1, Math.min(MAX_BOYUT, n));
-    grid.resize(n);
-    boyutSec(n);
-    // Üst üçgene (satır satır) yerleştir; alt üçgen otomatik aynalanır.
-    grid.clearAll();
-    let i = 0;
-    outer:
-    for (let r = 0; r < grid.size; r++) {
-      for (let c = r; c < grid.size; c++) {
-        if (i >= metin.length) break outer;
-        grid.set(r, c, metin[i++]);
-      }
-    }
+    // Mısrayı anlamlı bölüklere ayırıp SEÇİLİ boyuta işler:
+    // 4×4 → "Sanma şâhım / Herkesi sen / Sâdıkâne / Yâr olur"
+    grid.loadPoem(SIIR_DIZELERI[0]);
     kareCiz();
     // Buton vurgusunu güncelle
     boyutButonlariEl.querySelectorAll(".boyut-btn").forEach((b) => {
-      b.classList.toggle("secili", Number(b.dataset.boyut) === n);
+      b.classList.toggle("secili", Number(b.dataset.boyut) === grid.size);
     });
     durumEl.textContent =
-      "Yavuz Sultan Selim'in mısrası kareye işlendi — satır ve sütun aynı okunur.";
+      "Kelime karesi işlendi — her satır ve sütun şiiri aynı okur: «Sanma şâhım herkesi sen sâdıkâne yâr olur»";
     durumEl.classList.remove("iyi", "uyari");
     durumEl.classList.add("iyi");
     okumaGuncelle();
@@ -201,5 +190,5 @@ export function initApp(GridState) {
   temizleBtn.addEventListener("click", temizle);
 
   // ── Başlangıç ───────────────────────────────────────
-  boyutSec(5);
+  boyutSec(VARSAYILAN_BOYUT);
 }

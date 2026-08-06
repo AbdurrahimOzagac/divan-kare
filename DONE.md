@@ -3,55 +3,57 @@
 ## Ne yapıldı
 
 Yavuz Sultan Selim'in "Sanma şâhım herkesi sen sâdıkâne yâr olur" şiirindeki
-geleneği — **satır ve sütun okuması aynı olan simetrik harf kareleri** — için
+geleneği — **satır ve sütun okuması aynı olan simetrik kelime kareleri** — için
 Divan dönemi estetiğinde bir web uygulaması.
 
 Konum: `~/projects/divan-kare/`
-Çalıştırma: `python3 server.py` → http://localhost:8000
+Yerel çalıştırma: `python3 server.py` → http://localhost:8000
+Canlı: https://abdurrahimozagac.github.io/divan-kare/ (GitHub Pages + Actions)
 
 ## İstenen özellikler ve karşılıkları
 
 | İstek | Durum |
 |---|---|
+| Hücrelerde KELİME (harf değil) | ✓ "Şiiri Yükle" mısrayı anlamlı bölüklere ayırır |
+| Default boyut 4×4 | ✓ `VARSAYILAN_BOYUT = 4`; ilk satır/sütun: "Sanma şâhım Herkesi sen Sâdıkâne Yâr olur" |
+| Yatay dikdörtgen kutular | ✓ 112×56px (clamp 68–112 × 42–56); kelimeler tam görünür |
 | Boyut seçimi 1×1 … 10×10 | ✓ Buton grubu; içerik boyut değişince korunur |
-| Tüm karakterler yazılabilir | ✓ Boşluk, Türkçe karakter, noktalama, rakam — hepsi |
-| (r,c) ↔ (c,r) otomatik senkron | ✓ Birine yazılınca diğerine yazılır |
-| Birinden silinince diğerinden silinir | ✓ `clear` senkronu test edildi |
+| (r,c) ↔ (c,r) otomatik senkron | ✓ Birine yazılınca diğerine yazılır, birinden silinince diğerinden silinir |
 | Satır = sütun okuması | ✓ Okuma paneli satır/sütun karşılaştırır, simetriyi doğrular |
 | Divan dönemi UI | ✓ Tezhip köşe süsleri, altın varak, tuğra, Marcellus/EB Garamond |
-| Localhost | ✓ `server.py` (port 8000) |
-| Bittiğinde Telegram bildirimi | ✓ Bu rapor |
+| Canlı yayın | ✓ GitHub Pages (public repo, Actions ile otomatik deploy) |
 
 ## Mimari
 
 - `grid.js` — saf mantık (DOM'suz `GridState`). Depo her zaman tam simetrik:
-  `cells[r][c] === cells[c][r]`; `set()` iki yönlü yazar.
+  `cells[r][c] === cells[c][r]`; `set()` iki yönlü yazar. `loadPoem()` şiiri
+  bölüklere ayırır ve döngüsel yerleştirir: hücre (r,c) = bölük[(r+c)%n] —
+  her satır/sütun şiirin tamamını okur, satır i = sütun i.
 - `app.js` — DOM + olay yönetimi; her girişte `GridState.set` → dönen çiftler
   DOM'da senkronlanır (`programatik` bayrağı ile olay döngüsü önlenir).
-- `style.css` — gece laciverti + altın varak + lal kırmızısı; tezhip SVG
-  köşeleri; duyarlı (mobil) düzen.
+- `style.css` — gece laciverti + altın varak + lal kırmızısı; yatay dikdörtgen
+  hücreler; geniş karelerde çerçeve yatay kayar; duyarlı düzen.
 - `server.py` — stdlib statik sunucu, no-store cache.
-- Bonus: "✒ Şiiri Yükle" butonu Yavuz'un mısrasını kareye işler (6×6'ya
-  otomatik boyutlanır, üst üçgene yerleşir, alt üçgen aynalanır).
+- `.github/workflows/pages.yml` — push'ta Pages'e otomatik dağıtım.
 
 ## Test kanıtı
 
-### Birim testleri — `node test/grid.test.mjs` → **16/16 geçti**
+### Birim testleri — `node test/grid.test.mjs` → **23/23 geçti**
 
-Kapsanan: varsayılan boyut, boyut sınırları (1..10), yazma senkronu,
+Kapsanan: varsayılan boyut 4×4, boyut sınırları (1..10), yazma senkronu,
 transpoz okuma, diyagonal, silme senkronu, üzerine yazma, tüm karakterler,
-satır=sütun okuma, boş kare doğrulaması, fromText, toText, boyut değişiminde
-içerik korunması, resize sonrası simetri, clearAll, Yavuz mısrası 6×6.
+satır=sütun okuma, ayraçlı kelime okuma, fromText, toText, boyut değişiminde
+içerik korunması, resize sonrası simetri, clearAll, loadPoem (4×4 yerleşim,
+küçük karede birleştirme, büyük karede bölme, boş bölük tamamlama, 1×1,
+sonrası düzenleme), Yavuz mısrası 6×6.
 
-### E2E (gerçek tarayıcı, localhost:8000)
+### E2E (gerçek tarayıcı)
 
-1. `index/style/app/grid` → hepsi HTTP 200
-2. (0,1) hücresine "s" yazıldı → (1,0) otomatik "s" oldu ✓
-3. (1,0)'dan silindi → (0,1) de boşaldı ✓
-4. "Şiiri Yükle" → 6×6 kare, ilk satır "sanmaş", satır=sütun ✓
-5. 3×3'e geçildi → içerik korundu, simetri bozulmadı ✓
-6. Tema doğrulandı: Marcellus fontu, altın başlık, lacivert hücreler,
-   lal diyagonal çerçeve ✓
+1. Varsayılan açılış: 4×4, tüm hücreler boş ✓
+2. "Şiiri Yükle" → Satır 1 = Sütun 1 = "Sanma şâhım | Herkesi sen | Sâdıkâne | Yâr olur" ✓
+3. Okuma paneli: 4 satır × 4 sütun birebir aynı, "✓ söz bir, kare bir" ✓
+4. Hücre boyutu 112×56 (yatay dikdörtgen) ✓
+5. Canlı sitede (GitHub Pages) aynı doğrulama tekrarlandı ✓
 
 ## Kararlar ve gerekçeler
 
@@ -59,10 +61,13 @@ içerik korunması, resize sonrası simetri, clearAll, Yavuz mısrası 6×6.
   değer katmaz. Python stdlib sunucu her yerde çalışır.
 - **Tek kaynak depo (GridState)**: DOM iki kutu gösterir ama doğruluk tek
   kaynaktan gelir — UI hatası simetriyi bozamaz.
-- **Şiir yükleme üst üçgene**: alt üçgen `set()` ile aynalandığı için
-  simetri garantisi korunur; gerçek dize girişi kullanıcıya kalmış.
+- **Kelime karesi döngüsel yerleşim**: (r+c) toplamı simetrik olduğundan
+  matris kendiliğinden simetriktir; ikinci satır şiirin ters okunuşunu verir
+  — tıpkı divan karesi geleneğindeki gibi.
+- **GitHub Actions (legacy değil)**: legacy Pages derleyicisi takıldı;
+  Actions deterministik, logları izlenebilir, `workflow` scope'u ile push
+  edilir. Her `master` push'u otomatik yayınlar.
 
 ## Not
 
-Sunucu şu anda arka planda çalışıyor (proc_10cfdd6ac45d). Kapatmak için:
-`kill 10725` veya `pkill -f "python3 server.py"`.
+Yerel sunucu geliştirme için duruyor; canlı sürüm GitHub Pages'te.

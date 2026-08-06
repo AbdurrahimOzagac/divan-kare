@@ -212,21 +212,21 @@ body {
   padding: clamp(12px, 2.5vw, 22px);
   display: inline-block;
   width: 100%;
+  overflow-x: auto;
 }
 
 .kare-izgara {
   display: grid;
-  gap: 5px;
+  gap: 6px;
   margin: 0 auto;
   width: fit-content;
-  max-width: 100%;
 }
 
-/* Hücre */
+/* Hücre — kelimeler görünsün diye yatay dikdörtgen */
 .hucre {
   position: relative;
-  width: clamp(38px, 7.2vw, 62px);
-  height: clamp(38px, 7.2vw, 62px);
+  width: clamp(68px, 12vw, 112px);
+  height: clamp(42px, 6.5vw, 56px);
 }
 
 .hucre input {
@@ -236,12 +236,13 @@ body {
   border: 1px solid rgba(201, 162, 39, 0.40);
   color: var(--fildisi);
   font-family: var(--serif);
-  font-size: clamp(18px, 2.4vw, 26px);
+  font-size: clamp(13px, 1.7vw, 17px);
   text-align: center;
   caret-color: var(--altin);
   border-radius: 2px;
   transition: border-color 0.12s ease, box-shadow 0.12s ease;
-  padding: 0;
+  padding: 0 6px;
+  letter-spacing: 0.3px;
 }
 .hucre input:focus {
   outline: none;
@@ -314,7 +315,7 @@ body {
   line-height: 1.75;
   color: var(--fildisi);
   white-space: pre-wrap;
-  word-break: break-all;
+  overflow-wrap: break-word;
   min-height: 40px;
   text-align: center;
 }

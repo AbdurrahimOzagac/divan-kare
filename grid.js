@@ -5,6 +5,10 @@
  * (r,c) hücresi ile (c,r) hücresi AYNI değeri taşır — Yavuz Sultan
  * Selim'in kare düzenleme geleneği: satır okuması = sütun okuması.
  *
+ * Hücreler harf veya KELİME taşıyabilir. loadPoem, şiiri anlamlı
+ * bölüklere ayırıp döngüsel yerleştirir: hücre (r,c) = bölük[(r+c)%n],
+ * böylece her satır ve her sütun şiirin tamamını okur.
+ *
  * Bu modül hem tarayıcıda (script tag) hem Node'da (ESM) çalışır.
  */
 
@@ -12,7 +16,7 @@ export class GridState {
   /**
    * @param {number} size Kare boyutu (1..10)
    */
-  constructor(size = 5) {
+  constructor(size = 4) {
     this.size = 0;
     // cells[r][c] -> string. Sadece r <= c olan hücreler "gerçek" kaynaktır;
     // r > c olanlar her zaman transpozuna (cells[c][r]) yansır.
@@ -93,25 +97,28 @@ export class GridState {
 
   /**
    * Satır okuması: her satır soldan sağa birleştirilir.
+   * Kelime karelerinde ayraç olarak " " geçirin (readRows(" ")).
+   * @param {string} sep Hücre değerleri arasına konacak ayraç
    * @returns {string[]}
    */
-  readRows() {
-    return this.cells.map((row) => row.join(""));
+  readRows(sep = "") {
+    return this.cells.map((row) => row.join(sep));
   }
 
   /**
    * Sütun okuması: her sütun yukarıdan aşağı birleştirilir.
    * Simetri sayesinde readRows() ile birebir aynıdır.
+   * @param {string} sep Hücre değerleri arasına konacak ayraç
    * @returns {string[]}
    */
-  readCols() {
+  readCols(sep = "") {
     const cols = [];
     for (let c = 0; c < this.size; c++) {
-      let s = "";
+      const degerler = [];
       for (let r = 0; r < this.size; r++) {
-        s += this.cells[r][c];
+        degerler.push(this.cells[r][c]);
       }
-      cols.push(s);
+      cols.push(degerler.join(sep));
     }
     return cols;
   }
@@ -142,5 +149,64 @@ export class GridState {
         this.set(r, c, line[c] ?? "");
       }
     }
+  }
+
+  /**
+   * Şiiri kelime düzeyinde kareye işler (kelime karesi).
+   *
+   * Şiir bölükleri tam olarak n gruba ayrılır (n = kare boyutu) ve hücre
+   * (r,c) değeri bölükler[(r + c) % n] olur. Bu döngüsel yerleşim sayesinde:
+   * - Her satır ve her sütun şiirin TAMAMINI okur (dönüşlü olarak).
+   * - Satır i ile sütun i birebir aynıdır (satır okuması = sütun okuması).
+   *
+   * Örnek (4×4): ilk satır ve ilk sütun "Sanma şâhım Herkesi sen Sâdıkâne
+   * Yâr olur" okur; ikinci satır "Herkesi sen Sâdıkâne Yâr olur Sanma şâhım"
+   * — mısranın ters okunuşu, tıpkı divan karesi geleneğindeki gibi.
+   *
+   * @param {string[]} parcalar Şiirin anlamlı bölükleri
+   *        (ör. ["Sanma şâhım", "Herkesi sen", "Sâdıkâne", "Yâr olur"]).
+   */
+  loadPoem(parcalar) {
+    const n = this.size;
+    const bolukler = this._boluklereAyir(parcalar, n);
+    this.clearAll();
+    // (r+c) toplamı simetrik olduğu için matris kendiliğinden simetriktir.
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        this.cells[r][c] = bolukler[(r + c) % n];
+      }
+    }
+  }
+
+  /**
+   * Parça listesini tam olarak n bölüğe ayırır:
+   * - n == parça sayısı: olduğu gibi kullanılır.
+   * - n < parça sayısı: sondan başlayarak komşu parçalar birleştirilir.
+   * - n > parça sayısı: önce çok kelimeli parçalar kelimelerine ayrılır;
+   *   hâlâ yetmezse boş bölükler eklenir (okuma bozulmaz).
+   *
+   * @param {string[]} parcalar
+   * @param {number} n
+   * @returns {string[]}
+   */
+  _boluklereAyir(parcalar, n) {
+    n = Math.max(1, Math.min(10, Math.floor(n)));
+    let bolukler = parcalar.map((p) => String(p ?? "").trim()).filter(Boolean);
+    if (bolukler.length === 0) bolukler = [""];
+    // n < parça sayısı → birleştir (sondan başla, ilk bölükler korunur)
+    while (bolukler.length > n) {
+      const son = bolukler.pop();
+      bolukler[bolukler.length - 1] =
+        `${bolukler[bolukler.length - 1]} ${son}`.trim();
+    }
+    // n > parça sayısı → böl (çok kelimeli bölükleri kelimelerine ayır)
+    while (bolukler.length < n) {
+      const idx = bolukler.findIndex((b) => b.includes(" "));
+      if (idx === -1) break;
+      const [ilk, ...kalan] = bolukler[idx].split(/\s+/);
+      bolukler.splice(idx, 1, ilk, kalan.join(" "));
+    }
+    while (bolukler.length < n) bolukler.push("");
+    return bolukler;
   }
 }
