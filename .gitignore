@@ -1,0 +1,4 @@
+# GitHub Pages'e derlenmiş içerik gönderiliyor; Jekyll işlemesini engelle
+.nojekyll
+__pycache__/
+*.pyc
