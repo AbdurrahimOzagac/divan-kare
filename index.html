@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divan Karesi — Simetrik Şiir Kareleri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Tezhip köşe süsleri ───────────────────────────── -->
+<svg class="ornament orn-tl" viewBox="0 0 200 200" aria-hidden="true">
+  <path d="M0 0 H160 Q200 0 200 40 V200 L0 200 Z" fill="none" stroke="#c9a227" stroke-width="2"/>
+  <path d="M10 10 H150 Q190 10 190 50 V190" fill="none" stroke="#c9a227" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M30 30 H138 Q168 30 168 62 V168" fill="none" stroke="#8a6d1f" stroke-width="1"/>
+  <circle cx="30" cy="30" r="6" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+  <circle cx="168" cy="62" r="4" fill="#c9a227" opacity="0.6"/>
+  <circle cx="138" cy="30" r="3" fill="#c9a227" opacity="0.6"/>
+  <circle cx="168" cy="168" r="3" fill="#c9a227" opacity="0.6"/>
+</svg>
+<svg class="ornament orn-tr" viewBox="0 0 200 200" aria-hidden="true">
+  <path d="M200 0 H40 Q0 0 0 40 V200 L200 200 Z" fill="none" stroke="#c9a227" stroke-width="2"/>
+  <path d="M190 10 H50 Q10 10 10 50 V190" fill="none" stroke="#c9a227" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M170 30 H62 Q32 30 32 62 V170" fill="none" stroke="#8a6d1f" stroke-width="1"/>
+  <circle cx="170" cy="30" r="6" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+</svg>
+<svg class="ornament orn-bl" viewBox="0 0 200 200" aria-hidden="true">
+  <path d="M0 200 V40 Q0 0 40 0 H200 L200 200 Z" fill="none" stroke="#c9a227" stroke-width="2"/>
+  <path d="M10 190 V50 Q10 10 50 10 H190" fill="none" stroke="#c9a227" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M30 170 V62 Q30 32 62 32 H170" fill="none" stroke="#8a6d1f" stroke-width="1"/>
+  <circle cx="30" cy="170" r="6" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+</svg>
+<svg class="ornament orn-br" viewBox="0 0 200 200" aria-hidden="true">
+  <path d="M200 200 V40 Q200 0 160 0 H0 L0 200 Z" fill="none" stroke="#c9a227" stroke-width="2"/>
+  <path d="M190 190 V50 Q190 10 150 10 H10" fill="none" stroke="#c9a227" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M170 170 V62 Q170 32 138 32 H32" fill="none" stroke="#8a6d1f" stroke-width="1"/>
+  <circle cx="170" cy="170" r="6" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+</svg>
+
+<!-- ── Ana sütun ─────────────────────────────────────── -->
+<main class="page">
+
+  <header class="basmak">
+    <div class="tugra" aria-hidden="true">
+      <svg viewBox="0 0 120 70" width="84" height="49">
+        <path d="M15 55 Q30 10 60 12 Q95 14 105 30" fill="none" stroke="#c9a227" stroke-width="3"/>
+        <path d="M20 58 Q40 20 70 22 Q100 24 108 38" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M60 12 L60 30" stroke="#c9a227" stroke-width="2"/>
+        <path d="M60 22 L75 20 M60 26 L46 24" stroke="#c9a227" stroke-width="1.5"/>
+        <circle cx="60" cy="34" r="4" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <h1 class="baslik">Dîvân-ı Kare</h1>
+    <p class="altbaslik">Simetrik şiir kareleri — satır okunur, sütun aynı cevap verir</p>
+    <div class="ayrac" aria-hidden="true">
+      <span class="ayrac-cizgi"></span>
+      <span class="ayrac-nokta">◆</span>
+      <span class="ayrac-cizgi"></span>
+    </div>
+  </header>
+
+  <!-- ── Kontroller ──────────────────────────────────── -->
+  <section class="kontrol-panel" aria-label="Kontrol paneli">
+    <div class="kontrol-satir">
+      <div class="boyut-grup">
+        <label class="etiket" for="boyut">Kare Boyutu</label>
+        <div class="boyut-butonlar" id="boyutButonlari" role="group" aria-label="Kare boyutu seçimi"></div>
+      </div>
+      <div class="eylem-grup">
+        <button id="siirYukle" class="btn btn-altin" type="button">✒ Şiiri Yükle</button>
+        <button id="temizle" class="btn btn-mur" type="button">Temizle</button>
+      </div>
+    </div>
+    <div class="durum-satir">
+      <span id="durumMetni" class="durum" role="status">Bir kare seçin ve yazmaya başlayın.</span>
+    </div>
+  </section>
+
+  <!-- ── Kare ────────────────────────────────────────── -->
+  <section class="kare-cephesi" aria-label="Şiir karesi">
+    <div class="kare-cerceve">
+      <div id="kareIzgara" class="kare-izgara" role="grid" aria-label="Simetrik harf karesi"></div>
+    </div>
+
+    <!-- Satır / sütun karşılaştırma -->
+    <div class="okuma-paneli" aria-hidden="false">
+      <h2 class="panel-baslik">Okuyuş — Satır ve Sütun</h2>
+      <div class="okuma-kolonlari">
+        <div class="okuma-kolon">
+          <h3 class="kolon-baslik">→ Satırlar</h3>
+          <pre id="okumaSatirlar" class="okuma-metin"></pre>
+        </div>
+        <div class="okuma-kolon">
+          <h3 class="kolon-baslik">↓ Sütunlar</h3>
+          <pre id="okumaSutunlar" class="okuma-metin"></pre>
+        </div>
+      </div>
+      <div id="okumaSonuc" class="okuma-sonuc" role="status"></div>
+    </div>
+  </section>
+
+  <footer class="paye">
+    <p>«Sanma şâhım herkesi sen sâdıkâne yâr olur» — <em>Yavuz Sultan Selim</em></p>
+    <p class="paye-kucuk">Satır ve sütun bir olunca, söz de bir olur.</p>
+  </footer>
+</main>
+
+<script type="module">
+  import { GridState } from "./grid.js";
+  import { initApp } from "./app.js";
+  initApp(GridState);
+</script>
+</body>
+</html>
