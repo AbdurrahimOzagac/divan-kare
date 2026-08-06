@@ -1,0 +1,11 @@
+{
+  "name": "divan-kare",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dîvân-ı Kare — simetrik şiir kareleri (satır = sütun okuması)",
+  "type": "module",
+  "scripts": {
+    "test": "node test/grid.test.mjs",
+    "start": "python3 server.py"
+  }
+}
