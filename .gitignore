@@ -2,3 +2,4 @@
 .nojekyll
 __pycache__/
 *.pyc
+dist/

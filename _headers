@@ -1,0 +1,19 @@
+# Dîvân-ı Kare — Cloudflare Pages önbellek kuralları
+# HTML daima taze; sürümlü asset'ler (?v=N) uzun ömürlü.
+# NOT: index.html'de asset sürümünü (şu an v=4) her yayında artır!
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/style.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/app.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/grid.js
+  Cache-Control: public, max-age=31536000, immutable
