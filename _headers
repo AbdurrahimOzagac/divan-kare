@@ -1,6 +1,6 @@
 # Dîvân-ı Kare — Cloudflare Pages önbellek kuralları
 # HTML daima taze; sürümlü asset'ler (?v=N) uzun ömürlü.
-# NOT: index.html'de asset sürümünü (şu an v=4) her yayında artır!
+# NOT: index.html'de asset sürümünü (şu an v=5) her yayında artır!
 
 /*
   X-Content-Type-Options: nosniff

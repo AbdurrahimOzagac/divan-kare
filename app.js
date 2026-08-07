@@ -13,19 +13,18 @@
  */
 
 /**
- * Yavuz Sultan Selim'e atfedilen "Sanma şâhım" dörtlüğünün ORİJİNAL divan
- * karesi — 4×4 ayak karesi. Kaynak: malumatfurus.org (akademik inceleme)
- * ve yaygın mecmua metinleri; antoloji.com'daki "dostun mu sandın / âlemde
- * bir serdar olur / didâr olur" varyantı daha az yaygındır.
+ * Yavuz Sultan Selim'e atfedilen "Sanma şâhım" dörtlüğünün divan karesi —
+ * 4×4 ayak karesi. Hücreler kullanıcının verdiği orijinal metindeki gibi
+ * büyük/küçük harf kullanımıyla saklanır.
  *
  * Kare tam simetriktir: dört satır ve dört sütun dört mısrayı aynı okur.
- * (1,2) ↔ (2,1) = "Herkesi sen", (2,3) ↔ (3,2) = "Belki ol", ...
+ * loadSquare üst üçgeni (r <= c) kaynak alır, alt üçgeni ondan aynalar.
  */
 const SIIR_KARESI = [
-  ["Sanma şâhım", "Herkesi sen", "Sâdıkâne", "Yâr olur"],
-  ["Herkesi sen", "Dost mu sandın", "Belki ol", "Ağyâr olur"],
-  ["Sâdıkâne", "Belki ol", "Bu âlemde", "Dildâr olur"],
-  ["Yâr olur", "Ağyâr olur", "Dildâr olur", "Serdâr olur"],
+  ["Sanma şâhım", "herkesi sen", "sâdıkâne", "yâr olur"],
+  ["Herkesi sen", "dost mu sandın", "belki ol", "ağyâr olur"],
+  ["Sâdıkâne", "belki ol", "bu âlemde", "dildâr olur"],
+  ["Yâr olur", "ağyâr olur", "dildâr olur", "serdâr olur"],
 ];
 
 const MAX_BOYUT = 10;

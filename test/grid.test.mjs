@@ -223,25 +223,54 @@ test("loadPoem sonrası düzenleme simetriyi korur", () => {
 });
 
 // ── Gerçek divan karesi (loadSquare) ───────────────────
+// Kullanıcının verdiği orijinal metinle BİREBİR aynı hücreler.
+// Not: kullanıcı metninde (0,1)="herkesi sen" (küçük) ve (1,0)="Herkesi sen"
+// (büyük) yazılmıştır; kare tek değer tutabilir — loadSquare üst üçgeni
+// (r<=c) kaynak alır, yani satır 1 birebir korunur, sütun 1 ondan aynalanır.
 const ORJINAL_KARE = [
-  ["Sanma şâhım", "Herkesi sen", "Sâdıkâne", "Yâr olur"],
-  ["Herkesi sen", "Dost mu sandın", "Belki ol", "Ağyâr olur"],
-  ["Sâdıkâne", "Belki ol", "Bu âlemde", "Dildâr olur"],
-  ["Yâr olur", "Ağyâr olur", "Dildâr olur", "Serdâr olur"],
+  ["Sanma şâhım", "herkesi sen", "sâdıkâne", "yâr olur"],
+  ["Herkesi sen", "dost mu sandın", "belki ol", "ağyâr olur"],
+  ["Sâdıkâne", "belki ol", "bu âlemde", "dildâr olur"],
+  ["Yâr olur", "ağyâr olur", "dildâr olur", "serdâr olur"],
 ];
 
 test("loadSquare orijinal dörtlüğü 4×4'e yerleştirir; satır=sütun", () => {
   const g = new GridState();
   g.loadSquare(ORJINAL_KARE);
   assert.equal(g.size, 4);
+  // İlk mısra kullanıcının verdiği gibi BİREBİR okunur
+  assert.equal(g.readRows(" ")[0], "Sanma şâhım herkesi sen sâdıkâne yâr olur");
+  // Diğer satırlar üst üçgenden aynalanır (ilk harf küçüktür ama kelimeler aynıdır)
   assert.deepEqual(g.readRows(" "), [
-    "Sanma şâhım Herkesi sen Sâdıkâne Yâr olur",
-    "Herkesi sen Dost mu sandın Belki ol Ağyâr olur",
-    "Sâdıkâne Belki ol Bu âlemde Dildâr olur",
-    "Yâr olur Ağyâr olur Dildâr olur Serdâr olur",
+    "Sanma şâhım herkesi sen sâdıkâne yâr olur",
+    "herkesi sen dost mu sandın belki ol ağyâr olur",
+    "sâdıkâne belki ol bu âlemde dildâr olur",
+    "yâr olur ağyâr olur dildâr olur serdâr olur",
   ]);
   assert.deepEqual(g.readRows(" "), g.readCols(" "));
   assert.ok(g.verifySymmetry());
+});
+
+test("loadSquare şiirin tüm kelimelerini korur (4 mısra × 4 ayak)", () => {
+  const g = new GridState();
+  g.loadSquare(ORJINAL_KARE);
+  const MISRALAR = [
+    "Sanma şâhım herkesi sen sâdıkâne yâr olur",
+    "herkesi sen dost mu sandın belki ol ağyâr olur",
+    "sâdıkâne belki ol bu âlemde dildâr olur",
+    "yâr olur ağyâr olur dildâr olur serdâr olur",
+  ];
+  // Her satır ve her sütun dört mısranın kelimelerini tam bir kez okur
+  for (const okuma of g.readRows(" ")) {
+    assert.ok(MISRALAR.includes(okuma), `okuma: ${okuma}`);
+  }
+  // Hücre bazında: (0,1) ile (1,0) birebir aynı değeri taşır
+  assert.equal(g.get(0, 1), g.get(1, 0));
+  assert.equal(g.get(0, 2), g.get(2, 0));
+  assert.equal(g.get(0, 3), g.get(3, 0));
+  assert.equal(g.get(1, 2), g.get(2, 1));
+  assert.equal(g.get(1, 3), g.get(3, 1));
+  assert.equal(g.get(2, 3), g.get(3, 2));
 });
 
 test("loadSquare simetriyi zorlar (üst üçgen kaynak, alt üçgen aynalanır)", () => {
