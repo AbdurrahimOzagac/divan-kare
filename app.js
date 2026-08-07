@@ -11,9 +11,20 @@
  * ve her sütun şiirin tamamını aynı okur.
  */
 
-const SIIR_DIZELERI = [
+/**
+ * Yavuz Sultan Selim'e atfedilen "Sanma şâhım" dörtlüğünün ORİJİNAL divan
+ * karesi — 4×4 ayak karesi. Kaynak: malumatfurus.org (akademik inceleme)
+ * ve yaygın mecmua metinleri; antoloji.com'daki "dostun mu sandın / âlemde
+ * bir serdar olur / didâr olur" varyantı daha az yaygındır.
+ *
+ * Kare tam simetriktir: dört satır ve dört sütun dört mısrayı aynı okur.
+ * (1,2) ↔ (2,1) = "Herkesi sen", (2,3) ↔ (3,2) = "Belki ol", ...
+ */
+const SIIR_KARESI = [
   ["Sanma şâhım", "Herkesi sen", "Sâdıkâne", "Yâr olur"],
-  ["Herkesi sen", "Sâdıkâne", "Yâr olur", "Sanma şâhım"],
+  ["Herkesi sen", "Dost mu sandın", "Belki ol", "Ağyâr olur"],
+  ["Sâdıkâne", "Belki ol", "Bu âlemde", "Dildâr olur"],
+  ["Yâr olur", "Ağyâr olur", "Dildâr olur", "Serdâr olur"],
 ];
 
 const MAX_BOYUT = 10;
@@ -154,16 +165,16 @@ export function initApp(GridState) {
 
   // ── Şiiri Yükle ─────────────────────────────────────
   function siirYukle() {
-    // Mısrayı anlamlı bölüklere ayırıp SEÇİLİ boyuta işler:
-    // 4×4 → "Sanma şâhım / Herkesi sen / Sâdıkâne / Yâr olur"
-    grid.loadPoem(SIIR_DIZELERI[0]);
+    // Yavuz'a atfedilen dörtlüğün gerçek divan karesini (4×4 ayak karesi)
+    // yerleştir; boyut otomatik 4'e ayarlanır.
+    grid.loadSquare(SIIR_KARESI);
     kareCiz();
     // Buton vurgusunu güncelle
     boyutButonlariEl.querySelectorAll(".boyut-btn").forEach((b) => {
       b.classList.toggle("secili", Number(b.dataset.boyut) === grid.size);
     });
     durumEl.textContent =
-      "Kelime karesi işlendi — her satır ve sütun şiiri aynı okur: «Sanma şâhım herkesi sen sâdıkâne yâr olur»";
+      "Orijinal dörtlük kareye işlendi — dört satır ve dört sütun dört mısrayı aynı okur.";
     durumEl.classList.remove("iyi", "uyari");
     durumEl.classList.add("iyi");
     okumaGuncelle();

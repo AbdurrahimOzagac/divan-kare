@@ -222,6 +222,49 @@ test("loadPoem sonrası düzenleme simetriyi korur", () => {
   assert.ok(g.verifySymmetry());
 });
 
+// ── Gerçek divan karesi (loadSquare) ───────────────────
+const ORJINAL_KARE = [
+  ["Sanma şâhım", "Herkesi sen", "Sâdıkâne", "Yâr olur"],
+  ["Herkesi sen", "Dost mu sandın", "Belki ol", "Ağyâr olur"],
+  ["Sâdıkâne", "Belki ol", "Bu âlemde", "Dildâr olur"],
+  ["Yâr olur", "Ağyâr olur", "Dildâr olur", "Serdâr olur"],
+];
+
+test("loadSquare orijinal dörtlüğü 4×4'e yerleştirir; satır=sütun", () => {
+  const g = new GridState();
+  g.loadSquare(ORJINAL_KARE);
+  assert.equal(g.size, 4);
+  assert.deepEqual(g.readRows(" "), [
+    "Sanma şâhım Herkesi sen Sâdıkâne Yâr olur",
+    "Herkesi sen Dost mu sandın Belki ol Ağyâr olur",
+    "Sâdıkâne Belki ol Bu âlemde Dildâr olur",
+    "Yâr olur Ağyâr olur Dildâr olur Serdâr olur",
+  ]);
+  assert.deepEqual(g.readRows(" "), g.readCols(" "));
+  assert.ok(g.verifySymmetry());
+});
+
+test("loadSquare simetriyi zorlar (üst üçgen kaynak, alt üçgen aynalanır)", () => {
+  const g = new GridState();
+  g.loadSquare([
+    ["A", "B", "C"],
+    ["X", "E", "F"], // (1,0)="X" asimetrik — üst üçgen (0,1)="B" kazanır
+    ["Y", "Z", "I"],
+  ]);
+  assert.equal(g.get(1, 0), "B");
+  assert.equal(g.get(2, 0), "C");
+  assert.equal(g.get(2, 1), "F");
+  assert.ok(g.verifySymmetry());
+});
+
+test("loadSquare sonrası düzenleme simetriyi korur", () => {
+  const g = new GridState();
+  g.loadSquare(ORJINAL_KARE);
+  g.set(1, 2, "Dostlarım");
+  assert.equal(g.get(2, 1), "Dostlarım");
+  assert.ok(g.verifySymmetry());
+});
+
 // ── Yavuz örneği (harf karesi, geriye dönük uyum) ──────
 test("Yavuz mısrası 6×6 kareye yerleşir ve simetrik okunur", () => {
   const g = new GridState(6);

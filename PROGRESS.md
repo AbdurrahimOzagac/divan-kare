@@ -24,3 +24,14 @@
 - [x] E2E doğrulama — satır 1 = sütun 1 = tam şiir, dikdörtgen hücre ✓
 - [x] GitHub: repo `AbdurrahimOzagac/divan-kare` (public), Pages + Actions
 - [x] Canlı: https://abdurrahimozagac.github.io/divan-kare/ doğrulandı
+
+## 2026-08-06 (v3 — orijinal şiir düzeltmesi)
+
+- [x] Kullanıcı: "Şiiri orijinalini yanlış yazmışsın, internetten doğrusunu bul"
+- [x] Araştırma: dörtlük aslında 4×4 AYAK KARESİ — döngüsel değil, tam simetrik
+      (10 farklı ayak). Kaynaklar: malumatfurus.org (akademik), frmtr, antoloji.com
+- [x] grid.js — `loadSquare()`: üst üçgen kaynak, alt üçgen aynalanır
+- [x] app.js — `SIIR_KARESI` (orijinal 4×4), "Şiiri Yükle" kareyi işler
+- [x] index.html — "Yavuz Sultan Selim'e atfedilen dörtlük" (atıf tartışması notu)
+- [x] test — 26/26 geçti (loadSquare senaryoları dahil)
+- [x] E2E — dört satır = dört sütun = dört mısra ✓

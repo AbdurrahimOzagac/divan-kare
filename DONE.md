@@ -14,8 +14,9 @@ Canlı: https://abdurrahimozagac.github.io/divan-kare/ (GitHub Pages + Actions)
 
 | İstek | Durum |
 |---|---|
-| Hücrelerde KELİME (harf değil) | ✓ "Şiiri Yükle" mısrayı anlamlı bölüklere ayırır |
-| Default boyut 4×4 | ✓ `VARSAYILAN_BOYUT = 4`; ilk satır/sütun: "Sanma şâhım Herkesi sen Sâdıkâne Yâr olur" |
+| Hücrelerde KELİME (harf değil) | ✓ "Şiiri Yükle" orijinal dörtlüğün ayak karesini işler |
+| Default boyut 4×4 | ✓ `VARSAYILAN_BOYUT = 4` |
+| ORİJİNAL şiir metni | ✓ 4×4 ayak karesi; kaynak: malumatfurus.org + mecmua metinleri (antoloji varyantı "dostun mu sandın/didâr" daha az yaygın) |
 | Yatay dikdörtgen kutular | ✓ 112×56px (clamp 68–112 × 42–56); kelimeler tam görünür |
 | Boyut seçimi 1×1 … 10×10 | ✓ Buton grubu; içerik boyut değişince korunur |
 | (r,c) ↔ (c,r) otomatik senkron | ✓ Birine yazılınca diğerine yazılır, birinden silinince diğerinden silinir |

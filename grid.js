@@ -179,6 +179,33 @@ export class GridState {
   }
 
   /**
+   * Gerçek divan karesini (ayak karesi) yerleştirir.
+   *
+   * "Sanma şâhım" dörtlüğünün orijinali 4×4'lük bir AYAK karesidir: her
+   * hücre bir kelime kümesi (ayak) taşır ve kare tam simetriktir — dört
+   * satır da dört sütun da dört mısrayı aynı okur. Örn. (1,2)="Herkesi sen"
+   * ile (2,1)="Herkesi sen" aynıdır.
+   *
+   * Boyut otomatik olarak satır sayısına ayarlanır. Simetri zorlanır: üst
+   * üçgen (r <= c) kaynaktır, alt üçgen ondan aynalanır — veri asimetrik
+   * olsa bile depo tam simetrik kalır.
+   *
+   * @param {string[][]} satirlar Kareyi oluşturan satır dizileri.
+   */
+  loadSquare(satirlar) {
+    const boyut = Math.max(1, Math.min(10, satirlar.length));
+    this.resize(boyut);
+    for (let r = 0; r < boyut; r++) {
+      const satir = satirlar[r] ?? [];
+      for (let c = r; c < boyut; c++) {
+        const deger = String(satir[c] ?? "");
+        this.cells[r][c] = deger;
+        this.cells[c][r] = deger;
+      }
+    }
+  }
+
+  /**
    * Parça listesini tam olarak n bölüğe ayırır:
    * - n == parça sayısı: olduğu gibi kullanılır.
    * - n < parça sayısı: sondan başlayarak komşu parçalar birleştirilir.
