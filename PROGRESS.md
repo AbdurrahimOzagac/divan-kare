@@ -35,3 +35,12 @@
 - [x] index.html — "Yavuz Sultan Selim'e atfedilen dörtlük" (atıf tartışması notu)
 - [x] test — 26/26 geçti (loadSquare senaryoları dahil)
 - [x] E2E — dört satır = dört sütun = dört mısra ✓
+
+## 2026-08-06 (v4 — önbellek + varsayılan düzeltme)
+
+- [x] Kullanıcı: "Sitede yükle diyince gelen şiir doğru değil" — kök neden:
+      GitHub Pages asset'leri URL'de sürüm olmadan sunuluyor, tarayıcı eski
+      app.js'i (v2 döngüsel) önbellekte tutuyordu
+- [x] index.html — cache-busting: `style.css?v=4`, `grid.js?v=4`, `app.js?v=4`
+- [x] app.js — şiir açılışta OTOMATİK yükleniyor (default artık orijinal kare)
+- [x] E2E — açılış anında 16 hücre orijinal dörtlükle dolu ✓

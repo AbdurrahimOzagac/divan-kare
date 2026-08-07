@@ -6,9 +6,10 @@
  * DOM'da her iki kutu senkronlanır. Böylece (r,c) ↔ (c,r) birebir aynıdır:
  * birine yazılınca diğerine yazılır, birinden silinince diğerinden silinir.
  *
- * Kelime karesi: hücreler harf değil KELİME/kelime kümesi taşır. "Şiiri
- * Yükle" mısrayı anlamlı bölüklere ayırıp döngüsel yerleştirir — her satır
- * ve her sütun şiirin tamamını aynı okur.
+ * Kelime karesi: hücreler harf değil KELİME/kelime kümesi (ayak) taşır.
+ * "Şiiri Yükle" Yavuz'a atfedilen dörtlüğün ORİJİNAL 4×4 ayak karesini
+ * işler — kare tam simetriktir, dört satır ve dört sütun dört mısrayı aynı
+ * okur. Şiir açılışta otomatik yüklüdür.
  */
 
 /**
@@ -201,5 +202,7 @@ export function initApp(GridState) {
   temizleBtn.addEventListener("click", temizle);
 
   // ── Başlangıç ───────────────────────────────────────
+  // Orijinal dörtlük açılışta yüklü gelir — site açılır açılmaz doğru şiir görünür.
   boyutSec(VARSAYILAN_BOYUT);
+  siirYukle();
 }
