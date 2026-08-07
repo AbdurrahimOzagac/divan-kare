@@ -18,6 +18,15 @@ jobs:
           mkdir -p dist
           cp index.html style.css grid.js app.js _headers dist/
 
+      - name: Production branch'i 'master' olarak ayarla
+        run: |
+          curl -sS -X PATCH \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects/divan-kare" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"production_branch":"master"}' \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print('OK production_branch =', d['result']['production_branch']) if d['success'] else print('HATA:', d['errors'])"
+
       - name: Cloudflare Pages'e yükle
         uses: cloudflare/wrangler-action@v3
         with:
