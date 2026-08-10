@@ -44,3 +44,14 @@
 - [x] index.html — cache-busting: `style.css?v=4`, `grid.js?v=4`, `app.js?v=4`
 - [x] app.js — şiir açılışta OTOMATİK yükleniyor (default artık orijinal kare)
 - [x] E2E — açılış anında 16 hücre orijinal dörtlükle dolu ✓
+
+## 2026-08-07 (v5–v7 — Cloudflare Pages + fontlar)
+
+- [x] v5: Cloudflare Pages desteği — `_headers` önbellek kuralları, `cloudflare.yml`
+      workflow (push'ta otomatik deploy), `scripts/deploy.sh`
+- [x] Kullanıcı eklemeleri: v6 (şiir metni kullanıcının verdiği orijinal metinle
+      birebir — küçük harfler, 27 test), v6.1 (CF production branch = master)
+- [x] v7: Google Fonts engeli çözümü — fontlar self-host (8 woff2, latin+latin-ext),
+      `@font-face` style.css'te, index.html'den fonts.googleapis bağımlılığı SÖKÜLDÜ
+- [x] Doğrulama: pages.dev + github.io HTTP 200, 0 dış istek, fontlar kendi
+      alan adından immutable cache ile servis ediliyor, şiir otomatik yüklü ✓
